@@ -22,8 +22,10 @@ import {
 	Typography,
 } from '@material-ui/core'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 function CartPage() {
+	const router = useRouter()
 	const { state, dispatch } = useContext(Store)
 	const {
 		cart: { cartItems },
@@ -44,6 +46,11 @@ function CartPage() {
 	//remove item from cart
 	const removeItemHandler = async (item) => {
 		dispatch({ type: 'CART_REMOVE_ITEM', payload: item })
+	}
+
+	//checkout handler
+	const checkoutHandler = () => {
+		router.push('/shipping')
 	}
 
 	return (
@@ -177,6 +184,7 @@ function CartPage() {
 								{/* cart checkout button */}
 								<ListItem>
 									<Button
+										onClick={checkoutHandler}
 										variant='contained'
 										color='primary'
 										fullWidth>

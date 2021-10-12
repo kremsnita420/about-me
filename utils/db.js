@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 //define connection as empty object
-const connection = [{}];
+const connection = {};
 
 //check if is connected todb, if not make a connection
 async function connect() {

@@ -9,6 +9,10 @@ const useStyles = makeStyles({
         },
 
     },
+    navbarButton: {
+        color: '#F9D3C8',
+        textTransform: 'initial',
+    },
     brand: {
         fontWeight: 'bold',
         fontSize: '1.5rem',
@@ -22,10 +26,16 @@ const useStyles = makeStyles({
     footer: {
         marginTop: 10,
         textAlign: 'center',
+        fontSize: 30,
     },
     section: {
         marginTop: 10,
         marginBottom: 10,
+
+    },
+    form: {
+        maxWidth: 600,
+        margin: '0 auto',
     },
 });
 export default useStyles

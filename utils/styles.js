@@ -21,12 +21,14 @@ const useStyles = makeStyles({
         flexGrow: 1,
     },
     main: {
-        minHeight: '80vh',
+        minHeight: `calc(100vh - 135px)`,
+
     },
     footer: {
         marginTop: 10,
         textAlign: 'center',
         fontSize: 30,
+
     },
     section: {
         marginTop: 10,

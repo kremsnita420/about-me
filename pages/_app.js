@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import '../styles/globals.css';
 import { StoreProvider } from '../utils/StoreProvider';
+import { SnackbarProvider } from 'notistack';
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -10,9 +11,11 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
   return (
-    <StoreProvider>
-      <Component {...pageProps} />
-    </StoreProvider>
+    <SnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      <StoreProvider>
+        <Component {...pageProps} />
+      </StoreProvider>
+    </SnackbarProvider>
   );
 }
 

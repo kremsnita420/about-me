@@ -48,7 +48,9 @@ export default function HomePage(props) {
 	return (
 		<Layout>
 			<div>
-				<h1>Products</h1>
+				<Typography component='h1' variant='h1'>
+					Products
+				</Typography>
 				<Grid container spacing={3}>
 					{products.map((product) => (
 						<Grid item md={4} key={product.name}>

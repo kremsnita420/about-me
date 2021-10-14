@@ -28,7 +28,7 @@ export default function Login() {
 	//snackbar notifications
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 	const router = useRouter()
-	//login?redirect=/shipping
+
 	const { redirect } = router.query
 	const classes = useStyles()
 
@@ -38,9 +38,9 @@ export default function Login() {
 
 	useEffect(() => {
 		if (userInfo) {
-			router.push('/')
+			router.push(redirect || '/')
 		}
-	}, [router, userInfo])
+	}, [redirect, userInfo, router])
 
 	//login submit handler
 	const submitHandler = async ({ email, password }) => {
@@ -151,9 +151,9 @@ export default function Login() {
 						</Button>
 					</ListItem>
 					<ListItem>
-						Dont have an account? &nbsp;
+						Don&apos;t have an account? &nbsp;
 						<NextLink
-							href={`/login?redirect=${redirect || '/'}`}
+							href={`/register?redirect=${redirect || '/'}`}
 							passHref>
 							<Link>Register</Link>
 						</NextLink>

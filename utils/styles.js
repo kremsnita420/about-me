@@ -13,6 +13,9 @@ const useStyles = makeStyles({
         color: '#F9D3C8',
         textTransform: 'initial',
     },
+    transparentBg: {
+        backgroundColor: 'transparnet'
+    },
     brand: {
         fontWeight: 'bold',
         fontSize: '1.5rem',

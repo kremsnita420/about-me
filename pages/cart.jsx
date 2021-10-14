@@ -142,7 +142,7 @@ function CartPage() {
 											</TableCell>
 											{/* price */}
 											<TableCell align='right'>
-												{item.price}
+												{item.price}€
 											</TableCell>
 											{/* remove from cart */}
 											<TableCell align='right'>

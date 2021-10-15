@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import NextLink from 'next/link'
 import Image from 'next/image'
@@ -9,6 +9,7 @@ import {
 	Card,
 	Grid,
 	Link,
+	CircularProgress,
 	List,
 	ListItem,
 	Table,
@@ -21,11 +22,18 @@ import {
 } from '@material-ui/core'
 import useStyles from '../utils/styles'
 import CheckoutWizard from '../components/CheckoutWizard'
+import { useSnackbar } from 'notistack'
+import { getError } from '../utils/error'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
+import axios from 'axios'
 
 function PlaceOrder() {
 	const classes = useStyles()
-	const { state } = useContext(Store)
+	const router = useRouter()
+	const { state, dispatch } = useContext(Store)
 	const {
+		userInfo,
 		cart: { cartItems, shippingAddress, paymentMethod },
 	} = state
 
@@ -40,7 +48,49 @@ function PlaceOrder() {
 	//tax price
 	const taxPrice = round2decimal(itemsPrice * 0.22)
 	//total price
-	const totalPrice = round2decimal(itemsPrice + shippingPrice + taxPrice)
+	const totalPrice = round2decimal(itemsPrice + shippingPrice)
+
+	useEffect(() => {
+		if (!paymentMethod) {
+			router.push('/payment')
+		}
+		if (cartItems.length === 0) {
+			router.push('/cart')
+		}
+	}, [])
+
+	const { closeSnackbar, enqueueSnackbar } = useSnackbar()
+	const [loading, setLoading] = useState(false)
+	const placeOrderHandler = async () => {
+		closeSnackbar()
+		try {
+			setLoading(true)
+			const { data } = await axios.post(
+				'/api/orders',
+				{
+					orderOItems: cartItems,
+					shippingAddress,
+					paymentMethod,
+					itemsPrice,
+					shippingPrice,
+					taxPrice,
+					totalPrice,
+				},
+				{
+					headers: {
+						authorization: `Bearer ${userInfo.token}`,
+					},
+				}
+			)
+			dispatch({ type: 'CART_CLEAR' })
+			Cookies.remove('cartItems')
+			setLoading(false)
+			router.push(`/order/${data._id}`)
+		} catch (err) {
+			setLoading(false)
+			enqueueSnackbar(getError(err), { variant: 'error' })
+		}
+	}
 
 	return (
 		<Layout title='Place Order'>
@@ -215,12 +265,18 @@ function PlaceOrder() {
 							{/* place order button */}
 							<ListItem>
 								<Button
+									onClick={placeOrderHandler}
 									variant='contained'
 									color='primary'
 									fullWidth>
 									Place Order
 								</Button>
 							</ListItem>
+							{loading && (
+								<ListItem>
+									<CircularProgress />
+								</ListItem>
+							)}
 						</List>
 					</Card>
 				</Grid>

@@ -5,15 +5,13 @@ import {
 	Typography,
 	TextField,
 	Button,
-	Link,
 } from '@material-ui/core'
 import { useRouter } from 'next/router'
-import NextLink from 'next/link'
 import React, { useContext, useEffect } from 'react'
-import Cookies from 'js-cookie'
 import Layout from '../components/Layout'
 import { Store } from '../utils/StoreProvider'
 import useStyles from '../utils/styles'
+import Cookies from 'js-cookie'
 import { Controller, useForm } from 'react-hook-form'
 import CheckoutWizard from '../components/CheckoutWizard'
 
@@ -22,23 +20,26 @@ export default function Shipping() {
 		handleSubmit,
 		control,
 		formState: { errors },
+		setValue,
 	} = useForm()
 	const router = useRouter()
-	//login?redirect=/shipping
-	const { redirect } = router.query
-	const classes = useStyles()
-
-	//fetch from store provider
 	const { state, dispatch } = useContext(Store)
-	const { userInfo } = state
-
+	const {
+		userInfo,
+		cart: { shippingAddress },
+	} = state
 	useEffect(() => {
 		if (!userInfo) {
 			router.push('/login?redirect=/shipping')
 		}
-	}, [router, userInfo])
+		setValue('fullName', shippingAddress.fullName)
+		setValue('address', shippingAddress.address)
+		setValue('city', shippingAddress.city)
+		setValue('postalCode', shippingAddress.postalCode)
+		setValue('country', shippingAddress.country)
+	}, [])
 
-	//login submit handler
+	const classes = useStyles()
 	const submitHandler = ({
 		fullName,
 		address,
@@ -46,32 +47,19 @@ export default function Shipping() {
 		postalCode,
 		country,
 	}) => {
-		//save user data into store provider
 		dispatch({
 			type: 'SAVE_SHIPPING_ADDRESS',
-			payload: {
-				fullName,
-				address,
-				city,
-				postalCode,
-				country,
-			},
+			payload: { fullName, address, city, postalCode, country },
 		})
-		//save user to cookie
-		Cookies.set(
-			'shippingAddress',
-			JSON.stringify({
-				fullName,
-				address,
-				city,
-				postalCode,
-				country,
-			})
-		)
-		//redirect user
+		Cookies.set('shippingAddress', {
+			fullName,
+			address,
+			city,
+			postalCode,
+			country,
+		})
 		router.push('/payment')
 	}
-
 	return (
 		<Layout title='Shipping Address'>
 			<CheckoutWizard activeStep={1} />

@@ -15,6 +15,7 @@ export default function Layout({ title, description, children }) {
 	//fetch from store provider
 	const { state } = useContext(Store)
 	const { darkMode } = state
+
 	const classes = useStyles()
 
 	const theme = createTheme({

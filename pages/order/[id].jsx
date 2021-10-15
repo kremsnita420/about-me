@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import dynamic from 'next/dynamic'
 import NextLink from 'next/link'
 import Image from 'next/image'
@@ -28,10 +28,28 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 
-function PlaceOrder() {
+//define react reducer function
+function reducer(state, action) {
+	switch (action.type) {
+		case 'FETCH_REQUEST':
+			return { ...state, loading: true }
+		case 'FETCH_SUCCESS':
+			return {
+				...state,
+				loading: false,
+				order: action.payload,
+				error: '',
+			}
+		case 'FETCH_FAIL':
+			return { ...state, loading: false, error: action.payload, orde: {} }
+	}
+}
+
+function OrderPage({ params }) {
+	const orderId = params.id
 	const classes = useStyles()
 	const router = useRouter()
-	const { state, dispatch } = useContext(Store)
+	const { state } = useContext(Store)
 	const {
 		userInfo,
 		cart: { cartItems, shippingAddress, paymentMethod },
@@ -50,17 +68,37 @@ function PlaceOrder() {
 	//total price
 	const totalPrice = round2decimal(itemsPrice + shippingPrice)
 
+	//react reducer hook
+	const [{ loading, error, order }, dispatch] = useReducer(reducer, {
+		loading: true,
+		order: {},
+		error: '',
+	})
+
 	useEffect(() => {
-		if (!paymentMethod) {
-			router.push('/payment')
+		if (!userInfo) {
+			return router.push('/login')
 		}
-		if (cartItems.length === 0) {
-			router.push('/cart')
+		//fetch order details from backend
+		const fetchOrder = async () => {
+			try {
+				dispatch({ type: 'FETCH_REQUEST' })
+				const { data } = await axios.get(`/api/orders/${orderId}`, {
+					headers: { authorization: `Bearer ${userInfo.token}` },
+				})
+				dispatch({ type: 'FETCH_SUCCESS', payload: data })
+			} catch (err) {
+				dispatch({ type: 'FETCH_FAIL', payload: getError(err) })
+			}
+		}
+		// fetch order
+		if (!order || (order && order._id !== orderId)) {
+			fetchOrder()
 		}
 	}, [])
 
 	const { closeSnackbar, enqueueSnackbar } = useSnackbar()
-	const [loading, setLoading] = useState(false)
+
 	const placeOrderHandler = async () => {
 		closeSnackbar()
 		try {
@@ -263,21 +301,6 @@ function PlaceOrder() {
 									</Grid>
 								</Grid>
 							</ListItem>
-							{/* place order button */}
-							<ListItem>
-								<Button
-									onClick={placeOrderHandler}
-									variant='contained'
-									color='primary'
-									fullWidth>
-									Place Order
-								</Button>
-							</ListItem>
-							{loading && (
-								<ListItem>
-									<CircularProgress />
-								</ListItem>
-							)}
 						</List>
 					</Card>
 				</Grid>
@@ -286,5 +309,12 @@ function PlaceOrder() {
 	)
 }
 
+//pass order id to frontend on page refresh
+export async function getServerSideProps({ params }) {
+	return {
+		props: { params },
+	}
+}
+
 // RENDER ON CLIENTSIDE
-export default dynamic(() => Promise.resolve(PlaceOrder), { ssr: false })
+export default dynamic(() => Promise.resolve(OrderPage), { ssr: false })

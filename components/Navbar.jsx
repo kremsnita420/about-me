@@ -39,8 +39,11 @@ function Navbar() {
 		router.push('/')
 	}
 
-	const loginMenuCloseHandler = () => {
+	const loginMenuCloseHandler = (e, redirect) => {
 		setAnchorEl(null)
+		if (redirect) {
+			router.push(redirect)
+		}
 	}
 
 	const darkModeChangeHandler = () => {
@@ -101,11 +104,17 @@ function Navbar() {
 								keepMounted
 								open={Boolean(anchorEl)}
 								onClose={loginMenuCloseHandler}>
-								<MenuItem onClick={loginMenuCloseHandler}>
+								<MenuItem
+									onClick={(e) =>
+										loginMenuCloseHandler(e, '/profile')
+									}>
 									Profile
 								</MenuItem>
-								<MenuItem onClick={loginMenuCloseHandler}>
-									My account
+								<MenuItem
+									onClick={(e) =>
+										loginMenuCloseHandler(e, '/history')
+									}>
+									Order History
 								</MenuItem>
 								<MenuItem onClick={logoutClickHandler}>
 									Logout

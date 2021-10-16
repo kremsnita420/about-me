@@ -42,5 +42,8 @@ const useStyles = makeStyles({
         maxWidth: 600,
         margin: '0 auto',
     },
+    fullWidth: {
+        width: '100%',
+    }
 });
 export default useStyles

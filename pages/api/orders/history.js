@@ -9,14 +9,11 @@ const handler = nc({
 });
 handler.use(isAuth);
 
-handler.post(async (req, res) => {
+//get all users orders from backend
+handler.get(async (req, res) => {
     await db.connect();
-    const newOrder = new Order({
-        ...req.body,
-        user: req.user._id,
-    });
-    const order = await newOrder.save();
-    res.status(201).send(order);
+    const orders = await Order.find({ user: req.user._id })
+    res.send(orders);
 });
 
 export default handler;

@@ -40,13 +40,7 @@ export default function Shipping() {
 	}, [])
 
 	const classes = useStyles()
-	const submitHandler = ({
-		fullName,
-		address,
-		city,
-		postalCode,
-		country,
-	}) => {
+	const submitHandler = ({ fullName, address, city, postalCode, country }) => {
 		dispatch({
 			type: 'SAVE_SHIPPING_ADDRESS',
 			payload: { fullName, address, city, postalCode, country },
@@ -63,9 +57,7 @@ export default function Shipping() {
 	return (
 		<Layout title='Shipping Address'>
 			<CheckoutWizard activeStep={1} />
-			<form
-				onSubmit={handleSubmit(submitHandler)}
-				className={classes.form}>
+			<form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
 				<Typography component='h1' variant='h1'>
 					Shipping Address
 				</Typography>
@@ -88,8 +80,7 @@ export default function Shipping() {
 									error={Boolean(errors.fullName)}
 									helperText={
 										errors.fullName
-											? errors.fullName.type ===
-											  'minLength'
+											? errors.fullName.type === 'minLength'
 												? 'Full Name length is more than 1'
 												: 'Full Name is required'
 											: ''
@@ -115,8 +106,7 @@ export default function Shipping() {
 									error={Boolean(errors.address)}
 									helperText={
 										errors.address
-											? errors.address.type ===
-											  'minLength'
+											? errors.address.type === 'minLength'
 												? 'Address length is more than 1'
 												: 'Address is required'
 											: ''
@@ -168,8 +158,7 @@ export default function Shipping() {
 									error={Boolean(errors.postalCode)}
 									helperText={
 										errors.postalCode
-											? errors.postalCode.type ===
-											  'minLength'
+											? errors.postalCode.type === 'minLength'
 												? 'Postal Code length is more than 1'
 												: 'Postal Code is required'
 											: ''
@@ -195,8 +184,7 @@ export default function Shipping() {
 									error={Boolean(errors.country)}
 									helperText={
 										errors.country
-											? errors.country.type ===
-											  'minLength'
+											? errors.country.type === 'minLength'
 												? 'Country length is more than 1'
 												: 'Country is required'
 											: ''
@@ -205,11 +193,7 @@ export default function Shipping() {
 							)}></Controller>
 					</ListItem>
 					<ListItem>
-						<Button
-							variant='contained'
-							type='submit'
-							fullWidth
-							color='primary'>
+						<Button variant='contained' type='submit' fullWidth color='primary'>
 							Continue
 						</Button>
 					</ListItem>

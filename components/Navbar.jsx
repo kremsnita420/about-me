@@ -16,6 +16,8 @@ import {
 	Menu,
 	MenuItem,
 } from '@material-ui/core'
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 function Navbar() {
 	//fetch from store provider
@@ -62,28 +64,26 @@ function Navbar() {
 			<Toolbar>
 				<NextLink href='/' passHref>
 					<Link>
-						<Typography className={classes.brand}>
-							About*me
-						</Typography>
+						<Typography className={classes.brand}>About*me</Typography>
 					</Link>
 				</NextLink>
 				<div className={classes.grow}></div>
 				<div>
-					<Switch
-						checked={darkModeState}
-						onChange={darkModeChangeHandler}
-					/>
+					<Switch checked={darkModeState} onChange={darkModeChangeHandler} />
 					<NextLink href='/cart' passHref>
 						<Link>
 							<Typography component='span'>
 								{cart.cartItems.length > 0 ? (
 									<Badge
-										color='secondary'
+										color='primary'
+										size='small'
 										badgeContent={cart.cartItems.length}>
-										Cart
+										<ShoppingBasketIcon fontSize='medium' />
 									</Badge>
 								) : (
-									'Cart'
+									<Badge color='default' badgeContent=' '>
+										<ShoppingBasketIcon fontSize='medium' />
+									</Badge>
 								)}
 							</Typography>
 						</Link>
@@ -96,7 +96,9 @@ function Navbar() {
 								aria-haspopup='true'
 								onClick={loginClickHandler}
 								className={classes.navbarButton}>
-								{userInfo.name}
+								<AccountCircleIcon fontSize='medium'>
+									{userInfo.name}
+								</AccountCircleIcon>
 							</Button>
 							<Menu
 								id='simple-menu'
@@ -104,21 +106,21 @@ function Navbar() {
 								keepMounted
 								open={Boolean(anchorEl)}
 								onClose={loginMenuCloseHandler}>
-								<MenuItem
-									onClick={(e) =>
-										loginMenuCloseHandler(e, '/profile')
-									}>
+								<MenuItem onClick={(e) => loginMenuCloseHandler(e, '/profile')}>
 									Profile
 								</MenuItem>
-								<MenuItem
-									onClick={(e) =>
-										loginMenuCloseHandler(e, '/history')
-									}>
+								<MenuItem onClick={(e) => loginMenuCloseHandler(e, '/history')}>
 									Order History
 								</MenuItem>
-								<MenuItem onClick={logoutClickHandler}>
-									Logout
-								</MenuItem>
+								<MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
+								{userInfo.isAdmin && (
+									<MenuItem
+										onClick={(e) =>
+											loginMenuCloseHandler(e, '/admin/dashboard')
+										}>
+										Admin Dashboard
+									</MenuItem>
+								)}
 							</Menu>
 						</>
 					) : (

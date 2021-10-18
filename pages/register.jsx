@@ -17,6 +17,7 @@ import { Store } from '../utils/StoreProvider'
 import useStyles from '../utils/styles'
 import { Controller, useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
+import { getError } from '../utils/error'
 
 export default function Register() {
 	const {
@@ -41,12 +42,7 @@ export default function Register() {
 	}, [router, userInfo])
 
 	//login submit handler
-	const submitHandler = async ({
-		name,
-		email,
-		password,
-		confirmPassword,
-	}) => {
+	const submitHandler = async ({ name, email, password, confirmPassword }) => {
 		closeSnackbar()
 		if (password !== confirmPassword) {
 			enqueueSnackbar("Passwords don't match", { variant: 'error' })
@@ -66,21 +62,14 @@ export default function Register() {
 			//redirect user
 			router.push(redirect || '/')
 		} catch (error) {
-			enqueueSnackbar(
-				error.response.data
-					? error.response.data.message
-					: error.message,
-				{ variant: 'error' }
-			)
+			enqueueSnackbar(getError(error), { variant: 'error' })
 		}
 	}
 
 	return (
 		<Layout title='Register'>
 			{/* FORM START */}
-			<form
-				onSubmit={handleSubmit(submitHandler)}
-				className={classes.form}>
+			<form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
 				<Typography component='h1' variant='h1'>
 					Register
 				</Typography>
@@ -121,8 +110,7 @@ export default function Register() {
 							defaultValue=''
 							rules={{
 								required: true,
-								pattern:
-									/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+								pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
 							}}
 							render={({ field }) => (
 								<TextField
@@ -164,8 +152,7 @@ export default function Register() {
 									error={Boolean(errors.password)}
 									helperText={
 										errors.password
-											? errors.password.type ===
-											  'minLength'
+											? errors.password.type === 'minLength'
 												? 'Password length is more than 5'
 												: 'Password is required'
 											: ''
@@ -193,8 +180,7 @@ export default function Register() {
 									error={Boolean(errors.confirmPassword)}
 									helperText={
 										errors.confirmPassword
-											? errors.confirmPassword.type ===
-											  'minLength'
+											? errors.confirmPassword.type === 'minLength'
 												? 'Confirm Password length is more than 5'
 												: 'Confirm  Password is required'
 											: ''
@@ -204,19 +190,13 @@ export default function Register() {
 					</ListItem>
 					{/* SUBMIT BUTTON */}
 					<ListItem>
-						<Button
-							variant='contained'
-							type='submit'
-							fullWidth
-							color='primary'>
+						<Button variant='contained' type='submit' fullWidth color='primary'>
 							Register
 						</Button>
 					</ListItem>
 					<ListItem>
 						Already have an account? &nbsp;
-						<NextLink
-							href={`/login?redirect=${redirect || '/'}`}
-							passHref>
+						<NextLink href={`/login?redirect=${redirect || '/'}`} passHref>
 							<Link>Login</Link>
 						</NextLink>
 					</ListItem>

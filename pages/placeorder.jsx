@@ -110,10 +110,8 @@ function PlaceOrder() {
 								</Typography>
 							</ListItem>
 							<ListItem>
-								{shippingAddress.fullName},{' '}
-								{shippingAddress.address},{' '}
-								{shippingAddress.postalCode}{' '}
-								{shippingAddress.city},{' '}
+								{shippingAddress.fullName}, {shippingAddress.address},{' '}
+								{shippingAddress.postalCode} {shippingAddress.city},{' '}
 								{shippingAddress.country}
 							</ListItem>
 						</List>
@@ -142,12 +140,8 @@ function PlaceOrder() {
 											<TableRow>
 												<TableCell>Image</TableCell>
 												<TableCell>Name</TableCell>
-												<TableCell align='right'>
-													Quantity
-												</TableCell>
-												<TableCell align='right'>
-													Price
-												</TableCell>
+												<TableCell align='right'>Quantity</TableCell>
+												<TableCell align='right'>Price</TableCell>
 											</TableRow>
 										</TableHead>
 
@@ -156,17 +150,11 @@ function PlaceOrder() {
 												<TableRow key={item._id}>
 													{/* image */}
 													<TableCell>
-														<NextLink
-															href={`/product/${item.slug}`}
-															passHref>
+														<NextLink href={`/product/${item.slug}`} passHref>
 															<Link>
 																<Image
-																	src={
-																		item.image
-																	}
-																	alt={
-																		item.name
-																	}
+																	src={item.image}
+																	alt={item.name}
 																	width={50}
 																	height={50}
 																/>
@@ -175,27 +163,19 @@ function PlaceOrder() {
 													</TableCell>
 													{/* name */}
 													<TableCell>
-														<NextLink
-															href={`/product/${item.slug}`}
-															passHref>
+														<NextLink href={`/product/${item.slug}`} passHref>
 															<Link>
-																<Typography>
-																	{item.name}
-																</Typography>
+																<Typography>{item.name}</Typography>
 															</Link>
 														</NextLink>
 													</TableCell>
 													{/* quantity */}
 													<TableCell align='right'>
-														<Typography>
-															{item.quantity}
-														</Typography>
+														<Typography>{item.quantity}</Typography>
 													</TableCell>
 													{/* price */}
 													<TableCell align='right'>
-														<Typography>
-															{item.price}€
-														</Typography>
+														<Typography>{item.price}€</Typography>
 													</TableCell>
 													{/* remove from cart */}
 												</TableRow>
@@ -213,9 +193,7 @@ function PlaceOrder() {
 					<Card className={classes.section}>
 						<List>
 							<ListItem>
-								<Typography variant='h2'>
-									Order Summary
-								</Typography>
+								<Typography variant='h2'>Order Summary</Typography>
 							</ListItem>
 							<ListItem>
 								<Grid container>
@@ -243,9 +221,7 @@ function PlaceOrder() {
 										<Typography>Shipping:</Typography>
 									</Grid>
 									<Grid item xs={6}>
-										<Typography>
-											{shippingPrice}€
-										</Typography>
+										<Typography>{shippingPrice}€</Typography>
 									</Grid>
 								</Grid>
 							</ListItem>

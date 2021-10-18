@@ -27,9 +27,7 @@ export default function HomePage(props) {
 		//fetch product from backend
 		const { data } = await axios.get(`/api/products/${product._id}`)
 		// check if its already in cart and add one more
-		const existItem = state.cart.cartItems.find(
-			(x) => x._id === product._id
-		)
+		const existItem = state.cart.cartItems.find((x) => x._id === product._id)
 		const quantity = existItem ? existItem.quantity + 1 : 1
 		//check stock before adding one more to cart
 		if (data.countInStock < quantity) {
@@ -55,27 +53,21 @@ export default function HomePage(props) {
 					{products.map((product) => (
 						<Grid item md={4} key={product.name}>
 							<Card>
-								<NextLink
-									href={`/product/${product.slug}`}
-									passHref>
+								<NextLink href={`/product/${product.slug}`} passHref>
 									<CardActionArea>
 										<CardMedia
 											component='img'
 											image={product.image}
 											title={product.name}></CardMedia>
 										<CardContent>
-											<Typography>
-												{product.name}
-											</Typography>
+											<Typography>{product.name}</Typography>
 										</CardContent>
 									</CardActionArea>
 								</NextLink>
 								<CardActions>
 									<Typography>€ {product.price}</Typography>
 									<Button
-										onClick={() =>
-											addToCartHandler(product)
-										}
+										onClick={() => addToCartHandler(product)}
 										variant='contained'
 										size='large'
 										color='primary'>

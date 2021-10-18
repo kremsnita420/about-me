@@ -33,9 +33,7 @@ export default function ProductScreen(props) {
 		//fetch product from backend
 		const { data } = await axios.get(`/api/products/${product._id}`)
 		// check if its already in cart and add one more
-		const existItem = state.cart.cartItems.find(
-			(x) => x._id === product._id
-		)
+		const existItem = state.cart.cartItems.find((x) => x._id === product._id)
 		const quantity = existItem ? existItem.quantity + 1 : 1
 		//check stock before adding one more to cart
 		if (data.countInStock < quantity) {
@@ -77,24 +75,18 @@ export default function ProductScreen(props) {
 							</Typography>
 						</ListItem>
 						<ListItem>
-							<Typography>
-								Category: {product.category}
-							</Typography>
+							<Typography>Category: {product.category}</Typography>
 						</ListItem>
 						<ListItem>
 							<Typography>Brand: {product.brand}</Typography>
 						</ListItem>
 						<ListItem>
 							<Typography>
-								Rating: {product.rating} stars (
-								{product.numReviews} reviews)
+								Rating: {product.rating} stars ({product.numReviews} reviews)
 							</Typography>
 						</ListItem>
 						<ListItem>
-							<Typography>
-								{' '}
-								Description: {product.description}
-							</Typography>
+							<Typography> Description: {product.description}</Typography>
 						</ListItem>
 					</List>
 				</Grid>
@@ -107,9 +99,7 @@ export default function ProductScreen(props) {
 										<Typography>Price</Typography>
 									</Grid>
 									<Grid item xs={6}>
-										<Typography>
-											€{product.price}
-										</Typography>
+										<Typography>€{product.price}</Typography>
 									</Grid>
 								</Grid>
 							</ListItem>
@@ -120,9 +110,7 @@ export default function ProductScreen(props) {
 									</Grid>
 									<Grid item xs={6}>
 										<Typography>
-											{product.countInStock > 0
-												? 'In stock'
-												: 'Unavailable'}
+											{product.countInStock > 0 ? 'In stock' : 'Unavailable'}
 										</Typography>
 									</Grid>
 								</Grid>

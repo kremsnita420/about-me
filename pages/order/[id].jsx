@@ -201,10 +201,8 @@ function OrderPage({ params }) {
 									</Typography>
 								</ListItem>
 								<ListItem>
-									{shippingAddress.fullName},{' '}
-									{shippingAddress.address},{' '}
-									{shippingAddress.city},{' '}
-									{shippingAddress.postalCode},{' '}
+									{shippingAddress.fullName}, {shippingAddress.address},{' '}
+									{shippingAddress.city}, {shippingAddress.postalCode},{' '}
 									{shippingAddress.country}
 								</ListItem>
 								<ListItem>
@@ -224,8 +222,7 @@ function OrderPage({ params }) {
 								</ListItem>
 								<ListItem>{paymentMethod}</ListItem>
 								<ListItem>
-									Status:{' '}
-									{isPaid ? `paid at ${paidAt}` : 'not paid'}
+									Status: {isPaid ? `paid at ${paidAt}` : 'not paid'}
 								</ListItem>
 							</List>
 						</Card>
@@ -243,61 +240,37 @@ function OrderPage({ params }) {
 												<TableRow>
 													<TableCell>Image</TableCell>
 													<TableCell>Name</TableCell>
-													<TableCell align='right'>
-														Quantity
-													</TableCell>
-													<TableCell align='right'>
-														Price
-													</TableCell>
+													<TableCell align='right'>Quantity</TableCell>
+													<TableCell align='right'>Price</TableCell>
 												</TableRow>
 											</TableHead>
 											<TableBody>
 												{orderItems.map((item) => (
 													<TableRow key={item._id}>
 														<TableCell>
-															<NextLink
-																href={`/product/${item.slug}`}
-																passHref>
+															<NextLink href={`/product/${item.slug}`} passHref>
 																<Link>
 																	<Image
-																		src={
-																			item.image
-																		}
-																		alt={
-																			item.name
-																		}
-																		width={
-																			50
-																		}
-																		height={
-																			50
-																		}></Image>
+																		src={item.image}
+																		alt={item.name}
+																		width={50}
+																		height={50}></Image>
 																</Link>
 															</NextLink>
 														</TableCell>
 
 														<TableCell>
-															<NextLink
-																href={`/product/${item.slug}`}
-																passHref>
+															<NextLink href={`/product/${item.slug}`} passHref>
 																<Link>
-																	<Typography>
-																		{
-																			item.name
-																		}
-																	</Typography>
+																	<Typography>{item.name}</Typography>
 																</Link>
 															</NextLink>
 														</TableCell>
 														<TableCell align='right'>
-															<Typography>
-																{item.quantity}
-															</Typography>
+															<Typography>{item.quantity}</Typography>
 														</TableCell>
 														<TableCell align='right'>
-															<Typography>
-																€{item.price}
-															</Typography>
+															<Typography>€{item.price}</Typography>
 														</TableCell>
 													</TableRow>
 												))}
@@ -312,9 +285,7 @@ function OrderPage({ params }) {
 						<Card className={classes.section}>
 							<List>
 								<ListItem>
-									<Typography variant='h2'>
-										Order Summary
-									</Typography>
+									<Typography variant='h2'>Order Summary</Typography>
 								</ListItem>
 								<ListItem>
 									<Grid container>
@@ -322,9 +293,7 @@ function OrderPage({ params }) {
 											<Typography>Items:</Typography>
 										</Grid>
 										<Grid item xs={6}>
-											<Typography align='right'>
-												€{itemsPrice}
-											</Typography>
+											<Typography align='right'>€{itemsPrice}</Typography>
 										</Grid>
 									</Grid>
 								</ListItem>
@@ -334,9 +303,7 @@ function OrderPage({ params }) {
 											<Typography>Tax:</Typography>
 										</Grid>
 										<Grid item xs={6}>
-											<Typography align='right'>
-												€{taxPrice}
-											</Typography>
+											<Typography align='right'>€{taxPrice}</Typography>
 										</Grid>
 									</Grid>
 								</ListItem>
@@ -346,9 +313,7 @@ function OrderPage({ params }) {
 											<Typography>Shipping:</Typography>
 										</Grid>
 										<Grid item xs={6}>
-											<Typography align='right'>
-												€{shippingPrice}
-											</Typography>
+											<Typography align='right'>€{shippingPrice}</Typography>
 										</Grid>
 									</Grid>
 								</ListItem>

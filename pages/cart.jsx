@@ -75,15 +75,9 @@ function CartPage() {
 									<TableRow>
 										<TableCell>Image</TableCell>
 										<TableCell>Name</TableCell>
-										<TableCell align='right'>
-											Quantity
-										</TableCell>
-										<TableCell align='right'>
-											Price
-										</TableCell>
-										<TableCell align='right'>
-											Action
-										</TableCell>
+										<TableCell align='right'>Quantity</TableCell>
+										<TableCell align='right'>Price</TableCell>
+										<TableCell align='right'>Action</TableCell>
 									</TableRow>
 								</TableHead>
 
@@ -92,9 +86,7 @@ function CartPage() {
 										<TableRow key={item._id}>
 											{/* image */}
 											<TableCell>
-												<NextLink
-													href={`/product/${item.slug}`}
-													passHref>
+												<NextLink href={`/product/${item.slug}`} passHref>
 													<Link>
 														<Image
 															src={item.image}
@@ -107,13 +99,9 @@ function CartPage() {
 											</TableCell>
 											{/* name */}
 											<TableCell>
-												<NextLink
-													href={`/product/${item.slug}`}
-													passHref>
+												<NextLink href={`/product/${item.slug}`} passHref>
 													<Link>
-														<Typography>
-															{item.name}
-														</Typography>
+														<Typography>{item.name}</Typography>
 													</Link>
 												</NextLink>
 											</TableCell>
@@ -122,34 +110,21 @@ function CartPage() {
 												<Select
 													value={item.quantity}
 													onChange={(e) =>
-														updateCartHandler(
-															item,
-															e.target.value
-														)
+														updateCartHandler(item, e.target.value)
 													}>
-													{[
-														...Array(
-															item.countInStock
-														).keys(),
-													].map((x) => (
-														<MenuItem
-															key={x + 1}
-															value={x + 1}>
+													{[...Array(item.countInStock).keys()].map((x) => (
+														<MenuItem key={x + 1} value={x + 1}>
 															{x + 1}
 														</MenuItem>
 													))}
 												</Select>
 											</TableCell>
 											{/* price */}
-											<TableCell align='right'>
-												{item.price}€
-											</TableCell>
+											<TableCell align='right'>{item.price}€</TableCell>
 											{/* remove from cart */}
 											<TableCell align='right'>
 												<Button
-													onClick={() =>
-														removeItemHandler(item)
-													}
+													onClick={() => removeItemHandler(item)}
 													variant='contained'
 													color='secondary'>
 													X
@@ -169,16 +144,9 @@ function CartPage() {
 								{/* cart total price */}
 								<ListItem>
 									<Typography variant='h2'>
-										Subtotal (
-										{cartItems.reduce(
-											(a, c) => a + c.quantity,
-											0
-										)}{' '}
+										Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
 										items) : $
-										{cartItems.reduce(
-											(a, c) => a + c.quantity * c.price,
-											0
-										)}
+										{cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
 									</Typography>
 								</ListItem>
 								{/* cart checkout button */}

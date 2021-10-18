@@ -59,9 +59,7 @@ export default function Payment() {
 								aria-label='Payment Method'
 								name='paymentMethod'
 								value={paymentMethod}
-								onChange={(e) =>
-									setPaymentMethod(e.target.value)
-								}>
+								onChange={(e) => setPaymentMethod(e.target.value)}>
 								<FormControlLabel
 									label='PayPal'
 									value='PayPal'
@@ -78,11 +76,7 @@ export default function Payment() {
 						</FormControl>
 					</ListItem>
 					<ListItem>
-						<Button
-							fullWidth
-							type='submit'
-							variant='contained'
-							color='primary'>
+						<Button fullWidth type='submit' variant='contained' color='primary'>
 							Continue
 						</Button>
 					</ListItem>

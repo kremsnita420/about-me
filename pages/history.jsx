@@ -109,9 +109,7 @@ function OrderHistory() {
 								{loading ? (
 									<CircularProgress />
 								) : error ? (
-									<Typography className={classes.error}>
-										{error}
-									</Typography>
+									<Typography className={classes.error}>{error}</Typography>
 								) : (
 									<TableContainer>
 										<Table>
@@ -121,29 +119,16 @@ function OrderHistory() {
 													<TableCell>DATE</TableCell>
 													<TableCell>TOTAL</TableCell>
 													<TableCell>PAID</TableCell>
-													<TableCell>
-														DELIVERED
-													</TableCell>
-													<TableCell>
-														ACTION
-													</TableCell>
+													<TableCell>DELIVERED</TableCell>
+													<TableCell>ACTION</TableCell>
 												</TableRow>
 											</TableHead>
 											<TableBody>
 												{orders.map((order) => (
 													<TableRow key={order._id}>
-														<TableCell>
-															{order._id.substring(
-																20,
-																24
-															)}
-														</TableCell>
-														<TableCell>
-															{order.createdAt}
-														</TableCell>
-														<TableCell>
-															€{order.totalPrice}
-														</TableCell>
+														<TableCell>{order._id.substring(20, 24)}</TableCell>
+														<TableCell>{order.createdAt}</TableCell>
+														<TableCell>€{order.totalPrice}</TableCell>
 														<TableCell>
 															{order.isPaid
 																? `paid at ${order.paidAt}`
@@ -155,12 +140,8 @@ function OrderHistory() {
 																: 'not delivered'}
 														</TableCell>
 														<TableCell>
-															<NexLink
-																href={`/order/${order._id}`}
-																passHref>
-																<Button variant='contained'>
-																	Details
-																</Button>
+															<NexLink href={`/order/${order._id}`} passHref>
+																<Button variant='contained'>Details</Button>
 															</NexLink>
 														</TableCell>
 													</TableRow>

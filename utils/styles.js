@@ -5,7 +5,8 @@ const useStyles = makeStyles({
         backgroundColor: '#2A2D43',
         '& a': {
             color: '#F9D3C8',
-            marginRight: 20,
+            marginLeft: 10,
+            marginRight: 10,
         },
 
     },
@@ -41,6 +42,7 @@ const useStyles = makeStyles({
     form: {
         maxWidth: 600,
         margin: '0 auto',
+        width: '100%',
     },
     fullWidth: {
         width: '100%',

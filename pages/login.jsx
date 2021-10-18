@@ -17,6 +17,7 @@ import { Store } from '../utils/StoreProvider'
 import useStyles from '../utils/styles'
 import { Controller, useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
+import { getError } from '../utils/error'
 
 export default function Login() {
 	//reacthookform
@@ -59,21 +60,14 @@ export default function Login() {
 			router.push(redirect || '/')
 		} catch (error) {
 			//snackbar notification
-			enqueueSnackbar(
-				error.response.data
-					? error.response.data.message
-					: error.message,
-				{ variant: 'error' }
-			)
+			enqueueSnackbar(getError(error), { variant: 'error' })
 		}
 	}
 
 	return (
 		<Layout title='Login'>
 			{/* FORM START */}
-			<form
-				onSubmit={handleSubmit(submitHandler)}
-				className={classes.form}>
+			<form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
 				<Typography component='h1' variant='h1'>
 					Login
 				</Typography>
@@ -86,8 +80,7 @@ export default function Login() {
 							defaultValue=''
 							rules={{
 								required: true,
-								pattern:
-									/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+								pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
 							}}
 							render={({ field }) => (
 								<TextField
@@ -129,8 +122,7 @@ export default function Login() {
 									error={Boolean(errors.password)}
 									helperText={
 										errors.password
-											? errors.password.type ===
-											  'minLength'
+											? errors.password.type === 'minLength'
 												? 'Password length is more than 5'
 												: 'Password is required'
 											: ''
@@ -142,19 +134,13 @@ export default function Login() {
 					</ListItem>
 					{/* SUBMIT BUTTON */}
 					<ListItem>
-						<Button
-							variant='contained'
-							type='submit'
-							fullWidth
-							color='primary'>
+						<Button variant='contained' type='submit' fullWidth color='primary'>
 							Login
 						</Button>
 					</ListItem>
 					<ListItem>
 						Don&apos;t have an account? &nbsp;
-						<NextLink
-							href={`/register?redirect=${redirect || '/'}`}
-							passHref>
+						<NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
 							<Link>Register</Link>
 						</NextLink>
 					</ListItem>

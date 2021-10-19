@@ -17,7 +17,7 @@ import {
 	IconButton,
 } from '@material-ui/core'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
-import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Brightness4Icon from '@material-ui/icons/Brightness4'
 import Brightness5Icon from '@material-ui/icons/Brightness5'
 
@@ -73,7 +73,7 @@ function Navbar() {
 				<div>
 					{/* <Switch checked={darkModeState} onChange={darkModeChangeHandler} /> */}
 					<IconButton onClick={darkModeChangeHandler} color='inherit'>
-						{darkMode ? (
+						{darkModeState ? (
 							<Brightness4Icon className={classes.navbarButton} />
 						) : (
 							<Brightness5Icon className={classes.navbarButton} />
@@ -105,9 +105,9 @@ function Navbar() {
 								aria-haspopup='true'
 								onClick={loginClickHandler}
 								className={classes.navbarButton}>
-								<AccountBoxIcon fontSize='medium'>
+								<AccountCircleIcon fontSize='medium'>
 									{userInfo.name}
-								</AccountBoxIcon>
+								</AccountCircleIcon>
 							</Button>
 							<Menu
 								id='simple-menu'

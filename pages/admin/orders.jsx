@@ -18,11 +18,11 @@ import axios from 'axios'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useReducer } from 'react'
-import Layout from '../components/Layout'
-import { getError } from '../utils/error'
-import { Store } from '../utils/StoreProvider'
+import Layout from '../../components/Layout'
+import { getError } from '../../utils/error'
+import { Store } from '../../utils/StoreProvider'
 import NextLink from 'next/link'
-import useStyles from '../utils/styles'
+import useStyles from '../../utils/styles'
 
 //define react reducer function
 function reducer(state, action) {
@@ -38,14 +38,12 @@ function reducer(state, action) {
 			}
 		case 'FETCH_FAIL':
 			return { ...state, loading: false, error: action.payload }
-		case 'PAY_REQUEST':
-			return { ...state, loadingPay: true }
 		default:
 			state
 	}
 }
 
-function OrderHistory() {
+function AdminDashboard() {
 	const { state } = useContext(Store)
 	const { userInfo } = state
 	const router = useRouter()
@@ -62,11 +60,11 @@ function OrderHistory() {
 		if (!userInfo) {
 			router.push('/login')
 		}
-		//fetch order details from backend
-		const fetchOrders = async () => {
+		//fetch data details from backend
+		const fetchData = async () => {
 			try {
 				dispatch({ type: 'FETCH_REQUEST' })
-				const { data } = await axios.get('/api/orders/history', {
+				const { data } = await axios.get('/api/admin/orders', {
 					headers: { authorization: `Bearer ${userInfo.token}` },
 				})
 				dispatch({ type: 'FETCH_SUCCESS', payload: data })
@@ -75,7 +73,7 @@ function OrderHistory() {
 			}
 		}
 		//call function
-		fetchOrders()
+		fetchData()
 	}, [])
 
 	return (
@@ -84,14 +82,19 @@ function OrderHistory() {
 				<Grid item md={3} xs={12}>
 					<Card className={classes.section}>
 						<List>
-							<NextLink href='/profile' passHref>
+							<NextLink href='/admin/dashboard' passHref>
 								<ListItem button component='a'>
-									<ListItemText primary='User Profile'></ListItemText>
+									<ListItemText primary='Admin Dashboard' />
 								</ListItem>
 							</NextLink>
-							<NextLink href='/order-history' passHref>
+							<NextLink href='/admin/orders' passHref>
 								<ListItem selected button component='a'>
-									<ListItemText primary='Order History'></ListItemText>
+									<ListItemText primary='Orders' />
+								</ListItem>
+							</NextLink>
+							<NextLink href='/admin/products' passHref>
+								<ListItem button component='a'>
+									<ListItemText primary='Products' />
 								</ListItem>
 							</NextLink>
 						</List>
@@ -102,7 +105,7 @@ function OrderHistory() {
 						<List>
 							<ListItem>
 								<Typography component='h1' variant='h1'>
-									Order History
+									Orders
 								</Typography>
 							</ListItem>
 							<ListItem>
@@ -115,8 +118,9 @@ function OrderHistory() {
 										<Table>
 											<TableHead>
 												<TableRow>
-													<TableCell>ID</TableCell>
+													<TableCell>ORDER</TableCell>
 													<TableCell>DATE</TableCell>
+													<TableCell>USER</TableCell>
 													<TableCell>TOTAL</TableCell>
 													<TableCell>PAID</TableCell>
 													<TableCell>DELIVERED</TableCell>
@@ -126,8 +130,11 @@ function OrderHistory() {
 											<TableBody>
 												{orders.map((order) => (
 													<TableRow key={order._id}>
-														<TableCell>{order._id.substring(20, 24)}</TableCell>
+														<TableCell>{order._id.substring(12, 24)}</TableCell>
 														<TableCell>{order.createdAt}</TableCell>
+														<TableCell>
+															{order.user ? order.user.name : 'DELETED USER'}
+														</TableCell>
 														<TableCell>€{order.totalPrice}</TableCell>
 														<TableCell>
 															{order.isPaid
@@ -160,4 +167,4 @@ function OrderHistory() {
 }
 
 // MAKE CART RENDER ON CLIENTSIDE
-export default dynamic(() => Promise.resolve(OrderHistory), { ssr: false })
+export default dynamic(() => Promise.resolve(AdminDashboard), { ssr: false })

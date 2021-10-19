@@ -5,7 +5,7 @@ import db from '../../utils/db';
 import data from '../../utils/data';
 
 const handler = nc();
-//visit http://localhost:3000/api/seed to insert sample data into db after adding it here
+//visit http://localhost:3000/api/seed to insert sample data into db 
 handler.get(async (req, res) => {
     await db.connect();
     await Product.deleteMany();

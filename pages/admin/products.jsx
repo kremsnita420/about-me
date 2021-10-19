@@ -18,11 +18,11 @@ import axios from 'axios'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useReducer } from 'react'
-import Layout from '../components/Layout'
-import { getError } from '../utils/error'
-import { Store } from '../utils/StoreProvider'
+import Layout from '../../components/Layout'
+import { getError } from '../../utils/error'
+import { Store } from '../../utils/StoreProvider'
 import NextLink from 'next/link'
-import useStyles from '../utils/styles'
+import useStyles from '../../utils/styles'
 
 //define react reducer function
 function reducer(state, action) {
@@ -33,28 +33,26 @@ function reducer(state, action) {
 			return {
 				...state,
 				loading: false,
-				orders: action.payload,
+				products: action.payload,
 				error: '',
 			}
 		case 'FETCH_FAIL':
 			return { ...state, loading: false, error: action.payload }
-		case 'PAY_REQUEST':
-			return { ...state, loadingPay: true }
 		default:
 			state
 	}
 }
 
-function OrderHistory() {
+function AdminDashboard() {
 	const { state } = useContext(Store)
 	const { userInfo } = state
 	const router = useRouter()
 	const classes = useStyles()
 
 	//react reducer hook
-	const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
+	const [{ loading, error, products }, dispatch] = useReducer(reducer, {
 		loading: true,
-		orders: [],
+		products: [],
 		error: '',
 	})
 
@@ -62,11 +60,11 @@ function OrderHistory() {
 		if (!userInfo) {
 			router.push('/login')
 		}
-		//fetch order details from backend
-		const fetchOrders = async () => {
+		//fetch data details from backend
+		const fetchData = async () => {
 			try {
 				dispatch({ type: 'FETCH_REQUEST' })
-				const { data } = await axios.get('/api/orders/history', {
+				const { data } = await axios.get('/api/admin/products', {
 					headers: { authorization: `Bearer ${userInfo.token}` },
 				})
 				dispatch({ type: 'FETCH_SUCCESS', payload: data })
@@ -75,23 +73,28 @@ function OrderHistory() {
 			}
 		}
 		//call function
-		fetchOrders()
+		fetchData()
 	}, [])
 
 	return (
-		<Layout title='Order History'>
+		<Layout title='Product History'>
 			<Grid container spacing={1}>
 				<Grid item md={3} xs={12}>
 					<Card className={classes.section}>
 						<List>
-							<NextLink href='/profile' passHref>
+							<NextLink href='/admin/dashboard' passHref>
 								<ListItem button component='a'>
-									<ListItemText primary='User Profile'></ListItemText>
+									<ListItemText primary='Admin Dashboard' />
 								</ListItem>
 							</NextLink>
-							<NextLink href='/order-history' passHref>
+							<NextLink href='/admin/orders' passHref>
+								<ListItem button component='a'>
+									<ListItemText primary='Orders' />
+								</ListItem>
+							</NextLink>
+							<NextLink href='/admin/products' passHref>
 								<ListItem selected button component='a'>
-									<ListItemText primary='Order History'></ListItemText>
+									<ListItemText primary='Products' />
 								</ListItem>
 							</NextLink>
 						</List>
@@ -102,7 +105,7 @@ function OrderHistory() {
 						<List>
 							<ListItem>
 								<Typography component='h1' variant='h1'>
-									Order History
+									Products
 								</Typography>
 							</ListItem>
 							<ListItem>
@@ -116,33 +119,36 @@ function OrderHistory() {
 											<TableHead>
 												<TableRow>
 													<TableCell>ID</TableCell>
-													<TableCell>DATE</TableCell>
-													<TableCell>TOTAL</TableCell>
-													<TableCell>PAID</TableCell>
-													<TableCell>DELIVERED</TableCell>
-													<TableCell>ACTION</TableCell>
+													<TableCell>NAME</TableCell>
+													<TableCell>PRICE</TableCell>
+													<TableCell>CATEGORY</TableCell>
+													<TableCell>COUNT</TableCell>
+													<TableCell>RATING</TableCell>
+													<TableCell>ACTIONS</TableCell>
 												</TableRow>
 											</TableHead>
 											<TableBody>
-												{orders.map((order) => (
-													<TableRow key={order._id}>
-														<TableCell>{order._id.substring(20, 24)}</TableCell>
-														<TableCell>{order.createdAt}</TableCell>
-														<TableCell>€{order.totalPrice}</TableCell>
+												{products.map((product) => (
+													<TableRow key={product._id}>
 														<TableCell>
-															{order.isPaid
-																? `paid at ${order.paidAt}`
-																: 'not paid'}
+															{product._id.substring(18, 24)}
 														</TableCell>
+														<TableCell>{product.name}</TableCell>
+														<TableCell>{product.price}€</TableCell>
+														<TableCell>{product.category}</TableCell>
+														<TableCell>{product.countInStock}</TableCell>
+														<TableCell>{product.rating}</TableCell>
 														<TableCell>
-															{order.isDelivered
-																? `delivered at ${order.deliveredAt}`
-																: 'not delivered'}
-														</TableCell>
-														<TableCell>
-															<NextLink href={`/order/${order._id}`} passHref>
-																<Button variant='contained'>Details</Button>
-															</NextLink>
+															<NextLink
+																href={`/admin/product/${product._id}`}
+																passHref>
+																<Button size='small' variant='contained'>
+																	Edit
+																</Button>
+															</NextLink>{' '}
+															<Button size='small' variant='contained'>
+																Delete
+															</Button>
 														</TableCell>
 													</TableRow>
 												))}
@@ -160,4 +166,4 @@ function OrderHistory() {
 }
 
 // MAKE CART RENDER ON CLIENTSIDE
-export default dynamic(() => Promise.resolve(OrderHistory), { ssr: false })
+export default dynamic(() => Promise.resolve(AdminDashboard), { ssr: false })

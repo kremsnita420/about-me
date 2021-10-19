@@ -10,6 +10,7 @@ import {
 	ListItemText,
 	Typography,
 } from '@material-ui/core'
+import { Bar } from 'react-chartjs-2'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -48,7 +49,7 @@ function AdminDashboard() {
 	//react reducer hook
 	const [{ loading, error, summary }, dispatch] = useReducer(reducer, {
 		loading: true,
-		summary: { salesData: [] },
+		summary: { salesData: [], productCountData: [] },
 		error: '',
 	})
 
@@ -79,13 +80,18 @@ function AdminDashboard() {
 					<Card className={classes.section}>
 						<List>
 							<NextLink href='/admin/dashboard' passHref>
-								<ListItem button component='a'>
+								<ListItem selected button component='a'>
 									<ListItemText primary='Admin Dashboard' />
 								</ListItem>
 							</NextLink>
 							<NextLink href='/admin/orders' passHref>
-								<ListItem selected button component='a'>
+								<ListItem button component='a'>
 									<ListItemText primary='Orders' />
+								</ListItem>
+							</NextLink>
+							<NextLink href='/admin/products' passHref>
+								<ListItem button component='a'>
+									<ListItemText primary='Products' />
 								</ListItem>
 							</NextLink>
 						</List>
@@ -177,7 +183,26 @@ function AdminDashboard() {
 									Sales Chart
 								</Typography>
 							</ListItem>
-							<ListItem>Implement sales chart</ListItem>
+							<ListItem>
+								<Bar
+									data={{
+										labels: summary.salesData.map((x) => x._id),
+										datasets: [
+											{
+												label: 'Sales',
+												backgroundColor: 'rgba(162,222,208,1)',
+												data: summary.salesData.map((x) => x.totalSales),
+											},
+										],
+									}}
+									options={{
+										legend: {
+											display: true,
+											position: 'right',
+										},
+									}}
+								/>
+							</ListItem>
 						</List>
 					</Card>
 				</Grid>

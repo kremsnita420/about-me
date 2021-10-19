@@ -10,14 +10,16 @@ import {
 	Toolbar,
 	Typography,
 	Link,
-	Switch,
 	Badge,
 	Button,
 	Menu,
 	MenuItem,
+	IconButton,
 } from '@material-ui/core'
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import Brightness4Icon from '@material-ui/icons/Brightness4'
+import Brightness5Icon from '@material-ui/icons/Brightness5'
 
 function Navbar() {
 	//fetch from store provider
@@ -69,7 +71,14 @@ function Navbar() {
 				</NextLink>
 				<div className={classes.grow}></div>
 				<div>
-					<Switch checked={darkModeState} onChange={darkModeChangeHandler} />
+					{/* <Switch checked={darkModeState} onChange={darkModeChangeHandler} /> */}
+					<IconButton onClick={darkModeChangeHandler} color='inherit'>
+						{darkMode ? (
+							<Brightness4Icon className={classes.navbarButton} />
+						) : (
+							<Brightness5Icon className={classes.navbarButton} />
+						)}
+					</IconButton>
 					<NextLink href='/cart' passHref>
 						<Link>
 							<Typography component='span'>
@@ -78,11 +87,11 @@ function Navbar() {
 										color='primary'
 										size='small'
 										badgeContent={cart.cartItems.length}>
-										<ShoppingBasketIcon fontSize='medium' />
+										<ShoppingCartIcon fontSize='medium' />
 									</Badge>
 								) : (
 									<Badge color='default' badgeContent=' '>
-										<ShoppingBasketIcon fontSize='medium' />
+										<ShoppingCartIcon fontSize='medium' />
 									</Badge>
 								)}
 							</Typography>
@@ -96,9 +105,9 @@ function Navbar() {
 								aria-haspopup='true'
 								onClick={loginClickHandler}
 								className={classes.navbarButton}>
-								<AccountCircleIcon fontSize='medium'>
+								<AccountBoxIcon fontSize='medium'>
 									{userInfo.name}
-								</AccountCircleIcon>
+								</AccountBoxIcon>
 							</Button>
 							<Menu
 								id='simple-menu'

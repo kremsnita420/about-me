@@ -29,7 +29,7 @@ export default function HomePage(props) {
 		// check if its already in cart and add one more
 		const existItem = state.cart.cartItems.find((x) => x._id === product._id)
 		const quantity = existItem ? existItem.quantity + 1 : 1
-		//check stock before adding one more to cart
+		//check cart stock before adding one more to cart
 		if (data.countInStock < quantity) {
 			window.alert('Sorry. Product is sold out.')
 			return

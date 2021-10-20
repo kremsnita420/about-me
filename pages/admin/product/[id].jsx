@@ -37,6 +37,16 @@ function reducer(state, action) {
 			return { ...state, loadingUpdate: false, errorUpdate: '' }
 		case 'UPDATE_FAIL':
 			return { ...state, loadingUpdate: false, errorUpdate: action.payload }
+		case 'UPLOAD_REQUEST':
+			return { ...state, loadingUpload: true, errorUpload: '' }
+		case 'UPLOAD_SUCCESS':
+			return {
+				...state,
+				loadingUpload: false,
+				errorUpload: '',
+			}
+		case 'UPLOAD_FAIL':
+			return { ...state, loadingUpload: false, errorUpload: action.payload }
 		default:
 			return state
 	}
@@ -45,10 +55,11 @@ function reducer(state, action) {
 function ProductEdit({ params }) {
 	const productId = params.id
 	const { state } = useContext(Store)
-	const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
-		loading: true,
-		error: '',
-	})
+	const [{ error, loading, loadingUpdate, loadingUpload }, dispatch] =
+		useReducer(reducer, {
+			loading: true,
+			error: '',
+		})
 	const {
 		setValue,
 		handleSubmit,
@@ -90,6 +101,32 @@ function ProductEdit({ params }) {
 		setValue('email', userInfo.email)
 	}, [])
 
+	//upload image submit handler
+	const uploadHandler = async (e) => {
+		//create file and append selected image to it
+		const file = e.target.files[0]
+		const bodyFormData = new FormData()
+		bodyFormData.append('file', file)
+
+		//make a post request to db
+		try {
+			dispatch({ type: 'UPLOAD_REQUEST' })
+			const { data } = await axios.post('/api/admin/upload', bodyFormData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					authorization: `Bearer ${userInfo.token}`,
+				},
+			})
+			dispatch({ type: 'UPLOAD_SUCCESS' })
+			//set value to cloudinary server image
+			setValue('image', data.secure_url)
+			enqueueSnackbar('File uploaded successfully', { variant: 'success' })
+		} catch (err) {
+			dispatch({ type: 'UPLOAD_FAIL', payload: getError(err) })
+			enqueueSnackbar(getError(err), { variant: 'error' })
+		}
+	}
+	// update product to db submit handler
 	const submitHandler = async ({
 		name,
 		slug,
@@ -128,6 +165,7 @@ function ProductEdit({ params }) {
 			enqueueSnackbar(getError(err), { variant: 'error' })
 		}
 	}
+
 	return (
 		<Layout title={`Edit Product ${productId}`}>
 			<Grid container spacing={1}>
@@ -147,6 +185,11 @@ function ProductEdit({ params }) {
 							<NextLink href='/admin/products' passHref>
 								<ListItem selected button component='a'>
 									<ListItemText primary='Products' />
+								</ListItem>
+							</NextLink>
+							<NextLink href='/admin/users' passHref>
+								<ListItem button component='a'>
+									<ListItemText primary='Users' />
 								</ListItem>
 							</NextLink>
 						</List>
@@ -254,6 +297,13 @@ function ProductEdit({ params }) {
 													/>
 												)}
 											/>
+										</ListItem>
+										<ListItem>
+											<Button variant='contained' component='label'>
+												Upload File
+												<input type='file' onChange={uploadHandler} hidden />
+											</Button>
+											{loadingUpload && <CircularProgress />}
 										</ListItem>
 										<ListItem>
 											<Controller

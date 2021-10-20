@@ -23,8 +23,9 @@ import { getError } from '../../utils/error'
 import { Store } from '../../utils/StoreProvider'
 import NextLink from 'next/link'
 import useStyles from '../../utils/styles'
+import { useSnackbar } from 'notistack'
 
-//define react reducer function
+//define react reducer hook
 function reducer(state, action) {
 	switch (action.type) {
 		case 'FETCH_REQUEST':
@@ -33,28 +34,38 @@ function reducer(state, action) {
 			return {
 				...state,
 				loading: false,
-				orders: action.payload,
+				users: action.payload,
 				error: '',
 			}
 		case 'FETCH_FAIL':
 			return { ...state, loading: false, error: action.payload }
+		case 'DELETE_REQUEST':
+			return { ...state, loadingDelete: true }
+		case 'DELETE_SUCCESS':
+			return { ...state, loadingDelete: false, successDelete: true }
+		case 'DELETE_FAIL':
+			return { ...state, loadingDelete: false }
+		case 'DELETE_RESET':
+			return { ...state, loadingDelete: false, successDelete: false }
 		default:
 			state
 	}
 }
 
-function AdminOrders() {
+function AdminUsers() {
 	const { state } = useContext(Store)
 	const { userInfo } = state
 	const router = useRouter()
 	const classes = useStyles()
+	const { enqueueSnackbar } = useSnackbar()
 
-	//react reducer hook
-	const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
-		loading: true,
-		orders: [],
-		error: '',
-	})
+	//react reducer hook initial state
+	const [{ loading, loadingDelete, successDelete, error, users }, dispatch] =
+		useReducer(reducer, {
+			loading: true,
+			users: [],
+			error: '',
+		})
 
 	useEffect(() => {
 		if (!userInfo) {
@@ -64,7 +75,7 @@ function AdminOrders() {
 		const fetchData = async () => {
 			try {
 				dispatch({ type: 'FETCH_REQUEST' })
-				const { data } = await axios.get('/api/admin/orders', {
+				const { data } = await axios.get('/api/admin/users', {
 					headers: { authorization: `Bearer ${userInfo.token}` },
 				})
 				dispatch({ type: 'FETCH_SUCCESS', payload: data })
@@ -72,12 +83,35 @@ function AdminOrders() {
 				dispatch({ type: 'FETCH_FAIL', payload: getError(err) })
 			}
 		}
-		//call function
-		fetchData()
-	}, [])
+		//call function or reset
+		if (successDelete) {
+			dispatch({ type: 'DELETE_RESET' })
+		} else {
+			fetchData()
+		}
+	}, [successDelete])
+
+	//define delete item handler
+	const deleteHandler = async (userId) => {
+		if (!window.confirm('Are you sure?')) {
+			return
+		}
+
+		try {
+			dispatch({ type: 'DELETE_REQUEST' })
+			await axios.delete(`/api/admin/users/${userId}`, {
+				headers: { authorization: `Bearer ${userInfo.token}` },
+			})
+			dispatch({ type: 'DELETE_SUCCESS' })
+			enqueueSnackbar('User deleted successfully', { variant: 'success' })
+		} catch (err) {
+			dispatch({ type: 'DELETE_FAIL' })
+			enqueueSnackbar(getError(err), { variant: 'error' })
+		}
+	}
 
 	return (
-		<Layout title='Order History'>
+		<Layout title='Users'>
 			<Grid container spacing={1}>
 				<Grid item md={3} xs={12}>
 					<Card className={classes.section}>
@@ -88,18 +122,18 @@ function AdminOrders() {
 								</ListItem>
 							</NextLink>
 							<NextLink href='/admin/orders' passHref>
-								<ListItem selected button component='a'>
+								<ListItem button component='a'>
 									<ListItemText primary='Orders' />
+								</ListItem>
+							</NextLink>
+							<NextLink href='/admin/users' passHref>
+								<ListItem selected button component='a'>
+									<ListItemText primary='Users' />
 								</ListItem>
 							</NextLink>
 							<NextLink href='/admin/products' passHref>
 								<ListItem button component='a'>
 									<ListItemText primary='Products' />
-								</ListItem>
-							</NextLink>
-							<NextLink href='/admin/users' passHref>
-								<ListItem button component='a'>
-									<ListItemText primary='Users' />
 								</ListItem>
 							</NextLink>
 						</List>
@@ -110,8 +144,9 @@ function AdminOrders() {
 						<List>
 							<ListItem>
 								<Typography component='h1' variant='h1'>
-									Orders
+									Users
 								</Typography>
+								{loadingDelete && <CircularProgress />}
 							</ListItem>
 							<ListItem>
 								{loading ? (
@@ -123,38 +158,34 @@ function AdminOrders() {
 										<Table>
 											<TableHead>
 												<TableRow>
-													<TableCell>ORDER</TableCell>
-													<TableCell>DATE</TableCell>
-													<TableCell>USER</TableCell>
-													<TableCell>TOTAL</TableCell>
-													<TableCell>PAID</TableCell>
-													<TableCell>DELIVERED</TableCell>
-													<TableCell>ACTION</TableCell>
+													<TableCell>ID</TableCell>
+													<TableCell>NAME</TableCell>
+													<TableCell>EMAIL</TableCell>
+													<TableCell>ISADMIN</TableCell>
+													<TableCell>ACTIONS</TableCell>
 												</TableRow>
 											</TableHead>
 											<TableBody>
-												{orders.map((order) => (
-													<TableRow key={order._id}>
-														<TableCell>{order._id.substring(12, 24)}</TableCell>
-														<TableCell>{order.createdAt}</TableCell>
+												{users.map((user) => (
+													<TableRow key={user._id}>
+														<TableCell>{user._id.substring(18, 24)}</TableCell>
+														<TableCell>{user.name}</TableCell>
+														<TableCell>{user.email}</TableCell>
+														<TableCell>{user.isAdmin ? 'YES' : 'NO'}</TableCell>
 														<TableCell>
-															{order.user ? order.user.name : 'DELETED USER'}
-														</TableCell>
-														<TableCell>€{order.totalPrice}</TableCell>
-														<TableCell>
-															{order.isPaid
-																? `paid at ${order.paidAt}`
-																: 'not paid'}
-														</TableCell>
-														<TableCell>
-															{order.isDelivered
-																? `delivered at ${order.deliveredAt}`
-																: 'not delivered'}
-														</TableCell>
-														<TableCell>
-															<NextLink href={`/order/${order._id}`} passHref>
-																<Button variant='contained'>Details</Button>
-															</NextLink>
+															<NextLink
+																href={`/admin/user/${user._id}`}
+																passHref>
+																<Button size='small' variant='contained'>
+																	Edit
+																</Button>
+															</NextLink>{' '}
+															<Button
+																onClick={() => deleteHandler(user._id)}
+																size='small'
+																variant='contained'>
+																Delete
+															</Button>
 														</TableCell>
 													</TableRow>
 												))}
@@ -172,4 +203,4 @@ function AdminOrders() {
 }
 
 // MAKE CART RENDER ON CLIENTSIDE
-export default dynamic(() => Promise.resolve(AdminOrders), { ssr: false })
+export default dynamic(() => Promise.resolve(AdminUsers), { ssr: false })

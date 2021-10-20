@@ -18,8 +18,8 @@ import {
 } from '@material-ui/core'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import Brightness4Icon from '@material-ui/icons/Brightness4'
-import Brightness5Icon from '@material-ui/icons/Brightness5'
+import WbSunnyIcon from '@material-ui/icons/WbSunny'
+import Brightness2Icon from '@material-ui/icons/Brightness2'
 
 function Navbar() {
 	//fetch from store provider
@@ -71,14 +71,6 @@ function Navbar() {
 				</NextLink>
 				<div className={classes.grow}></div>
 				<div>
-					{/* <Switch checked={darkModeState} onChange={darkModeChangeHandler} /> */}
-					<IconButton onClick={darkModeChangeHandler} color='inherit'>
-						{darkModeState ? (
-							<Brightness4Icon className={classes.navbarButton} />
-						) : (
-							<Brightness5Icon className={classes.navbarButton} />
-						)}
-					</IconButton>
 					<NextLink href='/cart' passHref>
 						<Link>
 							<Typography component='span'>
@@ -137,6 +129,14 @@ function Navbar() {
 							<Link>Login</Link>
 						</NextLink>
 					)}
+					{/* <Switch checked={darkModeState} onChange={darkModeChangeHandler} /> */}
+					<IconButton onClick={darkModeChangeHandler} color='inherit'>
+						{darkModeState ? (
+							<WbSunnyIcon className={classes.navbarButton} />
+						) : (
+							<Brightness2Icon className={classes.navbarButton} />
+						)}
+					</IconButton>
 				</div>
 			</Toolbar>
 		</AppBar>

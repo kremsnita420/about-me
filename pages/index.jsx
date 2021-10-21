@@ -16,6 +16,7 @@ import axios from 'axios'
 import { Store } from '../utils/StoreProvider'
 import { useContext } from 'react'
 import { useRouter } from 'next/router'
+import Rating from '@material-ui/lab/Rating'
 
 export default function HomePage(props) {
 	const { products } = props
@@ -61,6 +62,7 @@ export default function HomePage(props) {
 											title={product.name}></CardMedia>
 										<CardContent>
 											<Typography>{product.name}</Typography>
+											<Rating value={product.rating} readOnly></Rating>
 										</CardContent>
 									</CardActionArea>
 								</NextLink>
@@ -70,7 +72,7 @@ export default function HomePage(props) {
 										onClick={() => addToCartHandler(product)}
 										variant='contained'
 										size='large'
-										color='primary'>
+										color='secondary'>
 										Add to cart
 									</Button>
 								</CardActions>

@@ -34,10 +34,16 @@ export default function Layout({ title, description, children }) {
 		palette: {
 			type: darkMode ? 'dark' : 'light',
 			primary: {
-				main: '#00E0A8',
+				light: '#7986cb',
+				main: '#3f51b5',
+				dark: '#303f9f',
+				contrastText: '#fefefe',
 			},
 			secondary: {
-				main: '#5E239D ',
+				light: '#ff4081',
+				main: '#f50057',
+				dark: '#c51162',
+				contrastText: '#fefefe',
 			},
 		},
 	})
@@ -45,12 +51,8 @@ export default function Layout({ title, description, children }) {
 	return (
 		<div>
 			<Head>
-				<title>
-					{title ? `${title} - Next About*me` : 'Next About*me'}
-				</title>
-				{description && (
-					<meta name='description' content={description}></meta>
-				)}
+				<title>{title ? `${title} - Next About*me` : 'Next About*me'}</title>
+				{description && <meta name='description' content={description}></meta>}
 			</Head>
 			<ThemeProvider theme={theme}>
 				<CssBaseline />

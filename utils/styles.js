@@ -47,5 +47,6 @@ const useStyles = makeStyles({
     fullWidth: {
         width: '100%',
     }
-});
+},
+    { index: 1 });
 export default useStyles

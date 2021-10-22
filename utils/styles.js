@@ -60,6 +60,14 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: '1rem',
     },
     menuButton: { padding: 0 },
+    mt1: {
+        marginTop: '1rem',
+    },
+    alignCenter: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '2rem',
+    },
     // search
     searchSection: {
         display: 'none',
@@ -80,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     iconButton: {
-        backgroundColor: '#264600',
+        backgroundColor: '#0062FF',
         padding: 5,
         borderRadius: '0 5px 5px 0',
         '& span': {

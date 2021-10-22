@@ -52,7 +52,7 @@ export default function HomePage(props) {
 				</Typography>
 				<Grid container spacing={3}>
 					{products.map((product) => (
-						<Grid item md={4} key={product._id}>
+						<Grid item xs={12} md={6} lg={4} key={product._id}>
 							<Card>
 								<NextLink href={`/product/${product.slug}`} passHref>
 									<CardActionArea>

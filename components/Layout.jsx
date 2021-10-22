@@ -22,7 +22,7 @@ export default function Layout({ title, description, children }) {
 		typography: {
 			h1: {
 				fontSize: '1.6rem',
-				fontWeight: 400,
+				fontWeight: 700,
 				margin: '1rem 0',
 			},
 			h2: {
@@ -34,16 +34,16 @@ export default function Layout({ title, description, children }) {
 		palette: {
 			type: darkMode ? 'dark' : 'light',
 			primary: {
-				light: '#5ED4C6',
-				main: '#264600',
-				dark: '#2A9D8F',
-				contrastText: '#fefefe',
+				light: '#00BBDE',
+				main: '#0062FF',
+				dark: '#00D19F',
+				contrastText: '#00058C',
 			},
 			secondary: {
-				light: '#E9C46A',
-				main: '#E76F51',
-				dark: '#F4A261',
-				contrastText: '#fefefe',
+				light: '#B64465',
+				main: '#7C0199',
+				dark: '#6D1E52',
+				contrastText: '#16010A',
 			},
 		},
 	})
@@ -52,7 +52,7 @@ export default function Layout({ title, description, children }) {
 		<div>
 			<Head>
 				<title>{title ? `${title} - Next About*me` : 'Next About*me'}</title>
-				{description && <meta name='description' content={description}></meta>}
+				{description && <meta name='description' content={description} />}
 			</Head>
 			<ThemeProvider theme={theme}>
 				<CssBaseline />

@@ -58,6 +58,7 @@ export default function ProductScreen(props) {
 		}
 	}
 
+	//fetch reviews from db and set them
 	const fetchReviews = async () => {
 		try {
 			const { data } = await axios.get(`/api/products/${product._id}/reviews`)
@@ -66,23 +67,10 @@ export default function ProductScreen(props) {
 			enqueueSnackbar(getError(err), { variant: 'error' })
 		}
 	}
+
 	useEffect(() => {
 		fetchReviews()
 	}, [])
-
-	//fetch reviews from db and set them
-
-	useEffect(() => {
-		const fetchReviews = async () => {
-			try {
-				const { data } = await axios.get(`/api/products/${product._id}/reviews`)
-				setReviews(data)
-			} catch (err) {
-				enqueueSnackbar(getError(err), { variant: 'error' })
-			}
-		}
-		fetchReviews()
-	}, [product._id, enqueueSnackbar])
 
 	if (!product) {
 		return <div>Product Not Found</div>

@@ -52,7 +52,7 @@ export default function HomePage(props) {
 				</Typography>
 				<Grid container spacing={3}>
 					{products.map((product) => (
-						<Grid item md={4} key={product.name}>
+						<Grid item md={4} key={product._id}>
 							<Card>
 								<NextLink href={`/product/${product.slug}`} passHref>
 									<CardActionArea>
@@ -90,7 +90,7 @@ export async function getServerSideProps() {
 	//connect to mongo db
 	await db.connect()
 	//get all products from products model. transform with plain js object with lean
-	const products = await Product.find({}).lean()
+	const products = await Product.find({}, '-reviews').lean()
 	//disconnect from db after geting data
 	await db.disconnect()
 

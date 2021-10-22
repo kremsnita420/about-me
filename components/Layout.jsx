@@ -34,15 +34,15 @@ export default function Layout({ title, description, children }) {
 		palette: {
 			type: darkMode ? 'dark' : 'light',
 			primary: {
-				light: '#7986cb',
-				main: '#3f51b5',
-				dark: '#303f9f',
+				light: '#5ED4C6',
+				main: '#264600',
+				dark: '#2A9D8F',
 				contrastText: '#fefefe',
 			},
 			secondary: {
-				light: '#ff4081',
-				main: '#f50057',
-				dark: '#c51162',
+				light: '#E9C46A',
+				main: '#E76F51',
+				dark: '#F4A261',
 				contrastText: '#fefefe',
 			},
 		},

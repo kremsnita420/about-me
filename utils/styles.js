@@ -87,5 +87,6 @@ const useStyles = makeStyles((theme) => ({
             color: '#2A2D43',
         },
     },
-}));//mui styles have index 0, so custom styles are applied last
+}),
+    { index: 1 });//mui styles have index 0, so custom styles are applied last
 export default useStyles

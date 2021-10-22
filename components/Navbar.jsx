@@ -30,7 +30,7 @@ import WbSunnyIcon from '@material-ui/icons/WbSunny'
 import Brightness2Icon from '@material-ui/icons/Brightness2'
 import MenuIcon from '@material-ui/icons/Menu'
 import CancelIcon from '@material-ui/icons/Cancel'
-import SearchIcon from '@material-ui/icons/Search'
+import PageviewIcon from '@material-ui/icons/Pageview'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
 
@@ -167,7 +167,7 @@ function Navbar() {
 								type='submit'
 								className={classes.iconButton}
 								aria-label='search'>
-								<SearchIcon />
+								<PageviewIcon />
 							</IconButton>
 						) : (
 							<IconButton
@@ -175,7 +175,7 @@ function Navbar() {
 								disabled
 								className={classes.iconButton}
 								aria-label='search'>
-								<SearchIcon />
+								<PageviewIcon />
 							</IconButton>
 						)}
 					</form>

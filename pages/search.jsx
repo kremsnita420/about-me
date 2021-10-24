@@ -245,6 +245,7 @@ export async function getServerSideProps({ query }) {
 	const sort = query.sort || ''
 	const searchQuery = query.query || ''
 
+	//categories filters
 	const queryFilter =
 		searchQuery && searchQuery !== 'all'
 			? {
@@ -275,6 +276,7 @@ export async function getServerSideProps({ query }) {
 			  }
 			: {}
 
+	//sorting by
 	const order =
 		sort === 'featured'
 			? { featured: -1 }

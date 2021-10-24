@@ -31,21 +31,26 @@ import Brightness2Icon from '@material-ui/icons/Brightness2'
 import MenuIcon from '@material-ui/icons/Menu'
 import CancelIcon from '@material-ui/icons/Cancel'
 import PageviewIcon from '@material-ui/icons/Pageview'
+import FavoriteBorderIcon from '@material-ui/icons//FavoriteBorder'
+import FavoriteIcon from '@material-ui/icons//Favorite'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
 
 function Navbar() {
 	//fetch from store provider
 	const { state, dispatch } = useContext(Store)
-	const { darkMode, cart, userInfo } = state
+	const { darkMode, cart, userInfo, wishList } = state
 	const [darkModeState, setDarkModeState] = useState(false)
 	const classes = useStyles()
 	const [anchorEl, setAnchorEl] = useState(null)
+	const [wishListAnchorEl, setWishListAnchorEl] = useState(null)
 	const router = useRouter()
 	const [sidbarVisible, setSidebarVisible] = useState(false)
 	const [categories, setCategories] = useState([])
 	const { enqueueSnackbar } = useSnackbar()
 	const [query, setQuery] = useState('')
+
+	console.log(wishList.wishListItems)
 
 	//search and query submit handler
 	const queryChangeHandler = (e) => {
@@ -86,6 +91,8 @@ function Navbar() {
 		dispatch({ type: 'USER_LOGOUT' })
 		Cookies.remove('userInfo')
 		Cookies.remove('cartItems')
+		Cookies.remove('shippinhAddress')
+		Cookies.remove('paymentMethod')
 		router.push('/')
 	}
 	const loginMenuCloseHandler = (e, redirect) => {
@@ -93,6 +100,14 @@ function Navbar() {
 		if (redirect) {
 			router.push(redirect)
 		}
+	}
+	//wishlist handlers
+	const wishListMenuCloseHandler = () => {
+		setWishListAnchorEl(null)
+	}
+
+	const wishListClickHandler = (e) => {
+		setWishListAnchorEl(e.currentTarget)
 	}
 
 	//darkmode handler
@@ -109,6 +124,7 @@ function Navbar() {
 	return (
 		<AppBar position='static' className={classes.navbar}>
 			<Toolbar className={classes.toolbar}>
+				{/* sidebar icon toggle */}
 				<Box display='flex' alignItems='center'>
 					<IconButton
 						edge='start'
@@ -124,6 +140,7 @@ function Navbar() {
 					</NextLink>
 				</Box>
 
+				{/* sidebar drawer */}
 				<Drawer
 					anchor='left'
 					open={sidbarVisible}
@@ -154,6 +171,7 @@ function Navbar() {
 					</List>
 				</Drawer>
 
+				{/* serachbox field */}
 				<div className={classes.searchSection}>
 					<form onSubmit={submitHandler} className={classes.searchForm}>
 						<InputBase
@@ -181,7 +199,9 @@ function Navbar() {
 					</form>
 				</div>
 
+				{/* right navbar buttons */}
 				<div>
+					{/* darkmode */}
 					<IconButton onClick={darkModeChangeHandler} color='inherit'>
 						{darkModeState ? (
 							<WbSunnyIcon className={classes.navbarButton} />
@@ -189,6 +209,7 @@ function Navbar() {
 							<Brightness2Icon className={classes.navbarButton} />
 						)}
 					</IconButton>
+					{/* cart */}
 					<NextLink href='/cart' passHref>
 						<Link>
 							<Typography component='span'>
@@ -208,6 +229,49 @@ function Navbar() {
 						</Link>
 					</NextLink>
 
+					{/* wishlist */}
+					<>
+						<Button
+							aria-controls='wishlist'
+							aria-haspopup='true'
+							onClick={wishListClickHandler}
+							className={classes.navbarButton}>
+							{wishList.wishListItems.length > 0 ? (
+								<FavoriteIcon fontSize='medium' />
+							) : (
+								<FavoriteBorderIcon fontSize='medium' />
+							)}
+						</Button>
+						<Menu
+							id='wishlist'
+							anchorEl={wishListAnchorEl}
+							keepMounted
+							open={Boolean(wishListAnchorEl)}
+							onClose={wishListMenuCloseHandler}>
+							<MenuItem>
+								<strong>WISHLIST</strong>
+							</MenuItem>
+							<Divider light />
+							{wishList.wishListItems.map((item) => (
+								<MenuItem key={item._id}>
+									{item.name} {item.price} €
+								</MenuItem>
+							))}
+							<Divider light />
+							<MenuItem>
+								<Typography variant='span'>
+									TOTAL:
+									{wishList.wishListItems.reduce(
+										(total, object) => object.price + total,
+										0
+									)}
+									€
+								</Typography>
+							</MenuItem>
+						</Menu>
+					</>
+
+					{/* user menu */}
 					{userInfo ? (
 						<>
 							<Button

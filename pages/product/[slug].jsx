@@ -97,6 +97,14 @@ export default function ProductScreen(props) {
 		router.push('/cart')
 	}
 
+	//add to wishlist handler
+	const addToWishlistHandler = async () => {
+		dispatch({
+			type: 'WISHLIST_ADD_ITEM',
+			payload: { ...product },
+		})
+	}
+
 	return (
 		<Layout title={product.name} description={product.description}>
 			<div className={classes.section}>
@@ -106,7 +114,10 @@ export default function ProductScreen(props) {
 					</Link>
 				</NextLink>
 			</div>
+
+			{/* PRODUCT INFO AND ACTIONS */}
 			<Grid container spacing={1}>
+				{/* Image container */}
 				<Grid item md={6} xs={12}>
 					<Image
 						src={product.image}
@@ -115,6 +126,7 @@ export default function ProductScreen(props) {
 						height={640}
 						layout='responsive'></Image>
 				</Grid>
+				{/* Stats container */}
 				<Grid item md={3} xs={12}>
 					<List>
 						<ListItem>
@@ -139,6 +151,8 @@ export default function ProductScreen(props) {
 						</ListItem>
 					</List>
 				</Grid>
+
+				{/* actions container */}
 				<Grid item md={3} xs={12}>
 					<Card>
 						<List>
@@ -173,11 +187,21 @@ export default function ProductScreen(props) {
 									Add to cart
 								</Button>
 							</ListItem>
+							<ListItem>
+								<Button
+									fullWidth
+									variant='outlined'
+									color='secondary'
+									onClick={addToWishlistHandler}>
+									Add To Wishlist
+								</Button>
+							</ListItem>
 						</List>
 					</Card>
 				</Grid>
 			</Grid>
 
+			{/* CUSTOMERS REVIEWS SECTION */}
 			<List>
 				<ListItem>
 					<Typography name='reviews' id='reviews' variant='h2'>

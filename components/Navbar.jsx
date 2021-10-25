@@ -253,13 +253,15 @@ function Navbar() {
 							</MenuItem>
 							<Divider light />
 							{wishList.wishListItems.map((item) => (
-								<MenuItem key={item._id}>
-									{item.name} {item.price} €
-								</MenuItem>
+								<>
+									<MenuItem key={item.name}>
+										{item.name} {item.price} €
+									</MenuItem>
+								</>
 							))}
 							<Divider light />
 							<MenuItem>
-								<Typography variant='span'>
+								<Typography variant='h4'>
 									TOTAL:
 									{wishList.wishListItems.reduce(
 										(total, object) => object.price + total,

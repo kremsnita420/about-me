@@ -18,6 +18,11 @@ const initialState = {
             ? Cookies.get('paymentMethod')
             : '',
     },
+    wishList: {
+        wishListItems: Cookies.get('wishListItems')
+            ? JSON.parse(Cookies.get('wishListItems'))
+            : [],
+    },
     userInfo: Cookies.get('userInfo')
         ? JSON.parse(Cookies.get('userInfo'))
         : null,
@@ -29,6 +34,25 @@ function reducer(state, action) {
             return { ...state, darkMode: true }
         case 'DARK_MODE_OFF':
             return { ...state, darkMode: false }
+
+        case 'WISHLIST_ADD_ITEM': {
+            const newListItem = action.payload
+            //check if its already on wishlist
+            const existListItem = state.wishList.wishListItems.find(
+                (item) => item._id === newListItem._id
+            )
+            //new value for wishlist 
+            const wishListItems = existListItem
+                ? state.wishList.wishListItems.map((item) =>
+                    item._id === existListItem._id ? newListItem : item
+                )
+                : [...state.wishList.wishListItems, newListItem]
+
+            //save wishlist items to cookie
+            Cookies.set('wishListItems', JSON.stringify(wishListItems))
+            return { ...state, wishList: { ...state.wishList, wishListItems } }
+        }
+
         case 'CART_ADD_ITEM': {
             const newItem = action.payload
             //check if item is already in cart
@@ -45,6 +69,7 @@ function reducer(state, action) {
             Cookies.set('cartItems', JSON.stringify(cartItems))
             return { ...state, cart: { ...state.cart, cartItems } }
         }
+
         case 'CART_REMOVE_ITEM': {
             const cartItems = state.cart.cartItems.filter(
                 (item) => item._id !== action.payload._id
@@ -52,6 +77,9 @@ function reducer(state, action) {
             //remove cart items from cookie
             Cookies.set('cartItems', JSON.stringify(cartItems))
             return { ...state, cart: { ...state.cart, cartItems } }
+        }
+        case 'CART_CLEAR': {
+            return { ...state, cart: { ...state.cart, cartItems: [] } }
         }
         case 'SAVE_SHIPPING_ADDRESS':
             return {
@@ -63,9 +91,6 @@ function reducer(state, action) {
                 ...state,
                 cart: { ...state.cart, paymentMethod: action.payload },
             }
-        case 'CART_CLEAR': {
-            return { ...state, cart: { ...state.cart, cartItems: [] } }
-        }
         case 'USER_LOGIN': {
             return { ...state, userInfo: action.payload }
         }

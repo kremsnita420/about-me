@@ -5,16 +5,16 @@ import db from "../../../utils/db"
 //define next-connect handler
 const handler = nc()
 
-//connect to db and get find products
+//connect to db and get categories
 handler.get(async (req, res) => {
     //connect to db
     await db.connect()
-    //return product by id
-    const product = await Product.findById(req.query.id)
+    //return all products and filter out duplicates
+    const categories = await Product.find().distinct('category');
     //disconnect from db
     await db.disconnect()
-    //send products to frontend
-    res.send(product)
+    //send categories to frontend
+    res.send(categories)
 })
 
 export default handler
